@@ -55,7 +55,9 @@ export class ApolloIoService {
     const results = await this.relevancyScoreService.getRelevancyScores(companies, query.chatGptKeywords);
     console.log(JSON.stringify(results, null, 2));
 
-    return results.map((result) => new AppCompanyDto(result));
+    return results
+      .sort((company1, company2) => company2.score - company1.score)
+      .map((company) => new AppCompanyDto(company));
   }
 
   private async getOrganizations(
