@@ -11,6 +11,7 @@ import {
   ListOrganizationResponse,
   Organization,
 } from '../interfaces';
+import { CompanyData, RelevancyScoreService } from '../../open-ai/services';
 import { UrlUtil } from '../../utils';
 import { AppCompanyDto } from '../../dtos';
 
@@ -24,23 +25,34 @@ export class ApolloIoService {
   public constructor(
     @Inject(apolloIoConfigFactory.KEY) private readonly apolloIoConfig: ApolloIoConfig,
     private readonly httpService: HttpService,
+    private readonly relevancyScoreService: RelevancyScoreService,
   ) {}
 
   public async listOrganizations(
-    query: Pick<ListOrganizationQuery, 'organization_locations' | 'q_organization_keyword_tags'>,
+    query: Pick<ListOrganizationQuery, 'organization_locations' | 'q_organization_keyword_tags'> & {
+      readonly chatGptKeywords: string[];
+    },
   ): Promise<AppCompanyDto[]> {
     const organizations = await this.getOrganizations(query);
     const organizationsWithDomains = organizations.filter((organization) => organization.primary_domain);
     const enrichedOrganizations = await this.enrichOrganizations(organizationsWithDomains);
 
-    return enrichedOrganizations.map(
-      (organization) =>
-        new AppCompanyDto({
-          ...organization,
-          seoDescription: organization.seo_description,
-          shortDescription: organization.short_description,
-        }),
+    const companies: CompanyData[] = enrichedOrganizations.map((c) => ({
+      name: c.name,
+      industry: c.industry,
+      country: c.country,
+      seo: c.seo_description,
+      description: c.short_description,
+    }));
+    console.log(
+      `################# APOLLO ################# RESULTS (${companies.length}): ${companies
+        .map((c) => c.name)
+        .join(', ')}`,
     );
+    const results = await this.relevancyScoreService.getRelevancyScores(companies, query.chatGptKeywords);
+    console.log(JSON.stringify(results, null, 2));
+
+    return results.map((result) => new AppCompanyDto(result));
   }
 
   private async getOrganizations(

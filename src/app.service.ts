@@ -9,6 +9,7 @@ export class AppService {
 
   public async listCompanies(query: AppListCompanyQueryDto): Promise<AppCompanyDto[]> {
     return this.apolloIoService.listOrganizations({
+      ...query,
       organization_locations: query.locations,
       q_organization_keyword_tags: query.keywords,
     });

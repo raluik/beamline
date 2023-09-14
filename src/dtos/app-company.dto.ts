@@ -5,10 +5,22 @@ export class AppCompanyDto {
   public readonly name: string;
 
   @Expose()
-  public readonly seoDescription: string;
+  public readonly industry: string;
 
   @Expose()
-  public readonly shortDescription: string;
+  public readonly country: string;
+
+  @Expose()
+  public readonly seo: string;
+
+  @Expose()
+  public readonly description: string;
+
+  @Expose()
+  public readonly score: number;
+
+  @Expose()
+  public readonly explanation: string;
 
   public constructor(args: AppCompanyDto) {
     Object.assign(this, plainToInstance(AppCompanyDto, args, { excludeExtraneousValues: true }));

@@ -13,4 +13,10 @@ export class AppListCompanyQueryDto {
   @IsNotEmpty({ each: true })
   @IsOptional()
   public readonly keywords?: string[];
+
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  @IsOptional()
+  public readonly chatGptKeywords: string[];
 }

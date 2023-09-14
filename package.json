@@ -4,7 +4,15 @@
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raluik/beamline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/raluik/beamline/issues"
+  },
+  "homepage": "https://github.com/raluik/beamline#readme",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -30,6 +38,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "joi": "^17.10.1",
+    "openai": "^4.6.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
