@@ -17,16 +17,21 @@ export type CompanyRelevancyResult = CompanyData & {
 
 @Injectable()
 export class RelevancyScoreService {
-  CHARACTER_LIMIT = 2000;
+  CHARACTER_LIMIT = 20000;
 
   public constructor(private readonly chat: OpenAiService) {}
 
   private getCompanyDataCountWithCharacterLimit(companies: CompanyData[], characterLimit: number): number {
     // try to fit as many companies as possible into the character limit
-    for (let i = 0; i < companies.length; i++) {
+    let i: number;
+    for (i = 0; i < companies.length; i++) {
       if (JSON.stringify(companies.slice(0, i + 1)).length > characterLimit) {
         return i + 1;
       }
+    }
+
+    if (i >= companies.length) {
+      return i;
     }
     throw new Error(`Failed to find a company count that fits into the character limit of ${characterLimit}`);
   }
