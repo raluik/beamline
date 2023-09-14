@@ -1,5 +1,5 @@
-import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class AppListCompanyQueryDto {
   @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
@@ -13,6 +13,18 @@ export class AppListCompanyQueryDto {
   @IsNotEmpty({ each: true })
   @IsOptional()
   public readonly keywords?: string[];
+
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  @IsOptional()
+  public readonly minEmployeeCount?: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  @IsOptional()
+  public readonly maxEmployeeCount?: number;
 
   @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @IsString({ each: true })

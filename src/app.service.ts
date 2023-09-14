@@ -12,6 +12,14 @@ export class AppService {
       ...query,
       organization_locations: query.locations,
       q_organization_keyword_tags: query.keywords,
+      organization_num_employees_ranges: this.getCompanyEmployeeRange(query),
     });
+  }
+
+  private getCompanyEmployeeRange({
+    minEmployeeCount,
+    maxEmployeeCount,
+  }: Pick<AppListCompanyQueryDto, 'minEmployeeCount' | 'maxEmployeeCount'>): string {
+    return `[${minEmployeeCount ?? ''},${maxEmployeeCount ?? ''}]`;
   }
 }

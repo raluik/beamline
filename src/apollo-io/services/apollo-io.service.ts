@@ -29,7 +29,10 @@ export class ApolloIoService {
   ) {}
 
   public async listOrganizations(
-    query: Pick<ListOrganizationQuery, 'organization_locations' | 'q_organization_keyword_tags'> & {
+    query: Pick<
+      ListOrganizationQuery,
+      'organization_locations' | 'q_organization_keyword_tags' | 'organization_num_employees_ranges'
+    > & {
       readonly chatGptKeywords: string[];
     },
   ): Promise<AppCompanyDto[]> {
@@ -56,7 +59,10 @@ export class ApolloIoService {
   }
 
   private async getOrganizations(
-    query: Pick<ListOrganizationQuery, 'organization_locations' | 'q_organization_keyword_tags'>,
+    query: Pick<
+      ListOrganizationQuery,
+      'organization_locations' | 'q_organization_keyword_tags' | 'organization_num_employees_ranges'
+    >,
   ): Promise<Organization[]> {
     const organizations: Organization[] = [];
 
