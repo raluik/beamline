@@ -1,3 +1,6 @@
-*.js
-test/test-companies.ts
+.DS_STORE
+
+dist
 node_modules
+
+test/test-companies.ts

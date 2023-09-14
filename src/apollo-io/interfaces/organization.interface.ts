@@ -1,0 +1,43 @@
+export interface Organization {
+  readonly id: string;
+  readonly name: string;
+  readonly website_url: string;
+  readonly blog_url: string | null;
+  readonly angellist_url: string | null;
+  readonly linkedin_url: string;
+  readonly twitter_url: string;
+  readonly facebook_url: string;
+  readonly primary_phone: Array<{
+    readonly number: string;
+    readonly source: string;
+  }>;
+  readonly languages: string[];
+  readonly alexa_ranking: number;
+  readonly phone: string;
+  readonly linkedin_uid: string;
+  readonly founded_year: number;
+  readonly publicly_traded_symbol: string;
+  readonly publicly_traded_exchange: string;
+  readonly logo_url: string;
+  readonly crunchbase_url: string | null;
+  readonly primary_domain: string;
+  readonly sanitized_phone: string;
+  readonly market_cap: string;
+  readonly industry: string;
+  readonly keywords: string[];
+  readonly estimated_num_employees: number;
+  readonly industries: string[];
+  readonly secondary_industries: string[];
+  readonly snippets_loaded: boolean;
+  readonly industry_tag_id: string;
+  readonly industry_tag_hash: Array<Readonly<Record<string, unknown>>>;
+  readonly retail_location_count: number;
+  readonly raw_address: string;
+  readonly street_address: string;
+  readonly city: string;
+  readonly state: string;
+  readonly country: string;
+  readonly postal_code: null;
+  readonly intent_strength: null;
+  readonly show_intent: boolean;
+}
