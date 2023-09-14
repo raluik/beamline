@@ -1,6 +1,6 @@
-import { getCompanyData } from './get-company-data';
-import { CompanyData, getRelevancyScores } from './get-relevancy-score';
-import { TEST_DATA } from './test_data';
+import { getCompanyData } from '../get-company-data';
+import { CompanyData, getRelevancyScores } from '../get-relevancy-score';
+// import { TEST_DATA } from './test-companies';
 const APOLLO_SEARCH_LOCATIONS = ['Estonia'];
 const APOLLO_SEARCH_KEYWORDS = ['sustainability'];
 const CHAT_GPT_SEARCH_KEYWORDS = ['energy efficiency'];
