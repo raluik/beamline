@@ -4,7 +4,7 @@ import { WebsocketService } from './websocket.service';
 import { AppStateService } from './app-state.service';
 
 @WebSocketGateway()
-export class EventsGateway implements OnGatewayInit {
+export class WebsocketGateway implements OnGatewayInit {
   @WebSocketServer() server: Server;
 
   constructor(
