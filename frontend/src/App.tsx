@@ -125,7 +125,7 @@ const ioClient = io(":3000", { transports: ["websocket"] });
 
 function App() {
   const [locations, setLocations] = useState<string>("estonia");
-  const [keywords, setKeywords] = useState<string>("green tech");
+  const [keywords, setKeywords] = useState<string>("green");
   const [relevanceKeywords, setRelevanceKeywords] =
     useState<string>("sustainability");
   const [minEmployeeCount, setMinEmployeeCount] = useState<string>("");
