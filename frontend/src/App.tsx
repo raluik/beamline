@@ -113,6 +113,7 @@ function App() {
   const [maxEmployeeCount, setMaxEmployeeCount] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [statusText, setStatusText] = useState('');
   const [companyResults, setCompanyResults] = useState<CompanyRelevancyResult[]>([]);
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined);
 
@@ -125,6 +126,7 @@ function App() {
       ioClient.on('state', (state: { status: string, statusText: string }) => {
         console.log('STATE:', state);
         setBusy(state.status !== 'Idle');
+        setStatusText(state.statusText);
       });
     });
   }, []);
@@ -213,6 +215,14 @@ function App() {
             }
           </div>
         </Button>
+        <br/>
+        {
+          statusText ?
+          <span>
+            {statusText}
+          </span>
+          : null
+        }
       </Form>
       {
         error ?

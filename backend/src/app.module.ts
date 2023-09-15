@@ -8,9 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApolloIoModule } from './apollo-io/apollo-io.module';
 import { OpenAiModule } from './open-ai/open-ai.module';
-import { WebsocketService } from './websocket.service';
-import { EventsGateway } from './websocket.gateway';
-import { AppStateService } from './app-state.service';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   controllers: [AppController],
@@ -20,14 +18,12 @@ import { AppStateService } from './app-state.service';
       useValue: new ValidationPipe({ transform: true, whitelist: true }),
     },
     AppService,
-    AppStateService,
-    EventsGateway,
-    WebsocketService,
   ],
   imports: [
     ApolloIoModule,
     ConfigModule.forRoot({ envFilePath: path.resolve(__dirname, `../config/${process.env.NODE_ENV}.env`) }),
     OpenAiModule,
+    WebsocketModule,
   ],
 })
 export class AppModule {}

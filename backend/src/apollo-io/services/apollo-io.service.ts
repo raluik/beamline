@@ -14,18 +14,20 @@ import {
 import { CompanyData, RelevancyScoreService } from '../../open-ai/services';
 import { UrlUtil } from '../../utils';
 import { AppCompanyDto } from '../../dtos';
+import { AppStateService, AppStatus } from 'src/websocket/app-state.service';
 
 @Injectable()
 export class ApolloIoService {
   private readonly API_URL = 'https://api.apollo.io';
 
-  private readonly DEFAULT_PAGE_SIZE = 25;
+  private readonly DEFAULT_PAGE_SIZE = 10;
   private readonly PAGE_LIMIT = 1;
 
   public constructor(
     @Inject(apolloIoConfigFactory.KEY) private readonly apolloIoConfig: ApolloIoConfig,
     private readonly httpService: HttpService,
     private readonly relevancyScoreService: RelevancyScoreService,
+    private readonly appState: AppStateService,
   ) {}
 
   public async estimateRelevancy(
@@ -37,8 +39,11 @@ export class ApolloIoService {
     },
   ): Promise<{ totalCount: number; organizations: AppCompanyDto[] }> {
     try {
+      this.appState.setStatus(AppStatus.RUNNING);
+      this.appState.setStatusText('Fetching companies from Apollo.io...');
       const { totalCount, organizations } = await this.getOrganizations(query);
       const organizationsWithDomains = organizations.filter((organization) => organization.primary_domain);
+      this.appState.setStatusText('Fetching addition data for companies from Apollo.io...');
       const enrichedOrganizations = await this.enrichOrganizations(organizationsWithDomains);
 
       const companies: CompanyData[] = enrichedOrganizations.map((c) => ({
@@ -53,6 +58,8 @@ export class ApolloIoService {
           .map((c) => c.name)
           .join(', ')}`,
       );
+
+      this.appState.setStatusText('Estimating relevancy scores with ChatGPT...');
       const results = await this.relevancyScoreService.getRelevancyScores(companies, query.relevanceKeywords);
       console.log(JSON.stringify(results, null, 2));
 
@@ -63,6 +70,9 @@ export class ApolloIoService {
     } catch (e) {
       console.log(e);
       throw e;
+    } finally {
+      this.appState.setStatus(AppStatus.IDLE);
+      this.appState.setStatusText('');
     }
   }
 

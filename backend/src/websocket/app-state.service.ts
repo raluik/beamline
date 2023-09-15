@@ -16,12 +16,12 @@ export class AppStateService {
 
   public setStatus(status: AppStatus) {
     this.status = status;
-    this.socket.emitEvent('status', status);
+    this.socket.emitEvent('state', { status: this.status, statusText: this.statusText });
   }
 
   public setStatusText(statusText: string) {
     this.statusText = statusText;
-    this.socket.emitEvent('statusText', statusText);
+    this.socket.emitEvent('state', { status: this.status, statusText: this.statusText });
   }
 
   public getStatus() {
