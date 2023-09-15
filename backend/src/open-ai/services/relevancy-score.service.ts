@@ -17,7 +17,7 @@ export type CompanyRelevancyResult = CompanyData & {
 
 @Injectable()
 export class RelevancyScoreService {
-  CHARACTER_LIMIT = 20000;
+  CHARACTER_LIMIT = 10000;
 
   public constructor(private readonly chat: OpenAiService) {}
 
@@ -39,7 +39,7 @@ export class RelevancyScoreService {
   async getRelevancyScores(companies: CompanyData[], keywords: string[]): Promise<CompanyRelevancyResult[]> {
     const QUESTION_PREFIX = `
 We are an investment fund looking to invest $100k-$1m size tickets into promising green-tech startups in Europe.
-Please rate the following startups with a integer score from 0-100 based on how well it might fit our investment criteria.
+Please rate the following startups with a integer score from 0-10 based on how well it might fit our investment criteria.
 Our investment batches so far have included themes such as: ${keywords.join(', ')}.
 Please also include a short explanation for each score.
 Please output the data in the following (Valid!) JSON format: [{ "name": "Company A", "score": 50, "explanation": "The company uses..." }]

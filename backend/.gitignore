@@ -4,3 +4,5 @@ dist
 node_modules
 
 test/test-companies.ts
+
+config/development.env

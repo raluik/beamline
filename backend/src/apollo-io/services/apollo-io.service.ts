@@ -19,7 +19,7 @@ import { AppCompanyDto } from '../../dtos';
 export class ApolloIoService {
   private readonly API_URL = 'https://api.apollo.io';
 
-  private readonly DEFAULT_PAGE_SIZE = 2;
+  private readonly DEFAULT_PAGE_SIZE = 25;
   private readonly PAGE_LIMIT = 1;
 
   public constructor(
@@ -28,36 +28,42 @@ export class ApolloIoService {
     private readonly relevancyScoreService: RelevancyScoreService,
   ) {}
 
-  public async listOrganizations(
+  public async estimateRelevancy(
     query: Pick<
       ListOrganizationQuery,
       'organization_locations' | 'q_organization_keyword_tags' | 'organization_num_employees_ranges'
     > & {
-      readonly chatGptKeywords: string[];
+      readonly relevanceKeywords: string[];
     },
-  ): Promise<AppCompanyDto[]> {
-    const organizations = await this.getOrganizations(query);
-    const organizationsWithDomains = organizations.filter((organization) => organization.primary_domain);
-    const enrichedOrganizations = await this.enrichOrganizations(organizationsWithDomains);
+  ): Promise<{ totalCount: number; organizations: AppCompanyDto[] }> {
+    try {
+      const { totalCount, organizations } = await this.getOrganizations(query);
+      const organizationsWithDomains = organizations.filter((organization) => organization.primary_domain);
+      const enrichedOrganizations = await this.enrichOrganizations(organizationsWithDomains);
 
-    const companies: CompanyData[] = enrichedOrganizations.map((c) => ({
-      name: c.name,
-      industry: c.industry,
-      country: c.country,
-      seo: c.seo_description,
-      description: c.short_description,
-    }));
-    console.log(
-      `################# APOLLO ################# RESULTS (${companies.length}): ${companies
-        .map((c) => c.name)
-        .join(', ')}`,
-    );
-    const results = await this.relevancyScoreService.getRelevancyScores(companies, query.chatGptKeywords);
-    console.log(JSON.stringify(results, null, 2));
+      const companies: CompanyData[] = enrichedOrganizations.map((c) => ({
+        name: c.name,
+        industry: c.industry,
+        country: c.country,
+        seo: c.seo_description,
+        description: c.short_description,
+      }));
+      console.log(
+        `################# APOLLO ################# RESULTS (${companies.length}): ${companies
+          .map((c) => c.name)
+          .join(', ')}`,
+      );
+      const results = await this.relevancyScoreService.getRelevancyScores(companies, query.relevanceKeywords);
+      console.log(JSON.stringify(results, null, 2));
 
-    return results
-      .sort((company1, company2) => company2.score - company1.score)
-      .map((company) => new AppCompanyDto(company));
+      return {
+        totalCount,
+        organizations: results.sort((company1, company2) => company2.score - company1.score),
+      };
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   }
 
   private async getOrganizations(
@@ -65,8 +71,9 @@ export class ApolloIoService {
       ListOrganizationQuery,
       'organization_locations' | 'q_organization_keyword_tags' | 'organization_num_employees_ranges'
     >,
-  ): Promise<Organization[]> {
+  ): Promise<{ totalCount: number; organizations: Organization[] }> {
     const organizations: Organization[] = [];
+    let totalCount: number;
 
     let response: ListOrganizationResponse | null = null;
     do {
@@ -74,11 +81,14 @@ export class ApolloIoService {
         ...query,
         page: response?.pagination ? response.pagination.page + 1 : 1,
       });
+      if (totalCount === undefined) {
+        totalCount = response.pagination.total_entries;
+      }
 
       organizations.push(...response.organizations);
     } while (response.pagination.page < response.pagination.total_pages && response.pagination.page < this.PAGE_LIMIT);
 
-    return organizations;
+    return { totalCount, organizations };
   }
 
   private async getOrganizationsPage(
@@ -105,14 +115,7 @@ export class ApolloIoService {
   }
 
   private async enrichOrganizations(organizations: Organization[]): Promise<EnrichedOrganization[]> {
-    const enrichedOrganizations: EnrichedOrganization[] = [];
-
-    for (const { primary_domain } of organizations) {
-      const enrichedOrganization = await this.getEnrichedOrganization(primary_domain);
-      enrichedOrganizations.push(enrichedOrganization);
-    }
-
-    return enrichedOrganizations;
+    return await Promise.all(organizations.map(({ primary_domain }) => this.getEnrichedOrganization(primary_domain)));
   }
 
   private async getEnrichedOrganization(domain: string): Promise<EnrichedOrganization> {

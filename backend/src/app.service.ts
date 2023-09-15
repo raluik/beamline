@@ -7,8 +7,10 @@ import { AppCompanyDto, AppListCompanyQueryDto } from './dtos';
 export class AppService {
   public constructor(private readonly apolloIoService: ApolloIoService) {}
 
-  public async listCompanies(query: AppListCompanyQueryDto): Promise<AppCompanyDto[]> {
-    return this.apolloIoService.listOrganizations({
+  public async estimateRelevancy(
+    query: AppListCompanyQueryDto,
+  ): Promise<{ totalCount: number; organizations: AppCompanyDto[] }> {
+    return this.apolloIoService.estimateRelevancy({
       ...query,
       organization_locations: query.locations,
       q_organization_keyword_tags: query.keywords,

@@ -1,6 +1,7 @@
 import { Expose, plainToInstance } from 'class-transformer';
+import { CompanyData } from 'src/open-ai/services';
 
-export class AppCompanyDto {
+export class AppCompanyDto implements CompanyData {
   @Expose()
   public readonly name: string;
 
