@@ -110,7 +110,6 @@ export class ApolloIoService {
     const url = UrlUtil.buildUrl(this.API_URL, '/v1/mixed_companies/search', {
       api_key: this.apolloIoConfig.apiKey,
     });
-
     const { data } = await firstValueFrom(
       this.httpService.post<ListOrganizationResponse>(
         `${url}`,

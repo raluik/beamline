@@ -21,7 +21,7 @@ export class AppService {
   private getCompanyEmployeeRange({
     minEmployeeCount,
     maxEmployeeCount,
-  }: Pick<AppListCompanyQueryDto, 'minEmployeeCount' | 'maxEmployeeCount'>): string | undefined {
-    return minEmployeeCount || maxEmployeeCount ? `[${minEmployeeCount ?? ''},${maxEmployeeCount ?? ''}]` : undefined;
+  }: Pick<AppListCompanyQueryDto, 'minEmployeeCount' | 'maxEmployeeCount'>): [string] | undefined {
+    return minEmployeeCount || maxEmployeeCount ? [`${minEmployeeCount ?? ''},${maxEmployeeCount ?? ''}`] : undefined;
   }
 }
