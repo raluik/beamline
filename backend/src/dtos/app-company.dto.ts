@@ -23,6 +23,15 @@ export class AppCompanyDto implements CompanyData {
   @Expose()
   public readonly explanation: string;
 
+  @Expose()
+  public readonly logo: string;
+
+  @Expose()
+  public readonly website: string;
+
+  @Expose()
+  public readonly shortDescription: string;
+
   public constructor(args: AppCompanyDto) {
     Object.assign(this, plainToInstance(AppCompanyDto, args, { excludeExtraneousValues: true }));
   }

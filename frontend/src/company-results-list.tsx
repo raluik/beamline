@@ -1,6 +1,8 @@
 import Card from "react-bootstrap/Card"
+import Image from 'react-bootstrap/Image';
 import { CompanyRelevancyResult } from "./types"
 import { getFlagEmoji } from "./utils"
+import { Anchor } from "react-bootstrap";
 
 export interface Props {
   companyResults: CompanyRelevancyResult[]
@@ -23,17 +25,22 @@ export const CompanyResultsList: React.FunctionComponent<Props> = ({ companyResu
           <Card key={companyResult.name}>
             <div className="d-flex flex-column gap-2">
               <div className="d-flex flex-row gap-2">
-                <div className="score" style={{ backgroundColor: getColorFromScore(companyResult.score) }}>{companyResult.score}</div>
                 <div className="d-flex flex-row gap-4 align-content-center align-items-center ">
                   <div className="d-flex flex-row gap-4">
-                    <div className="d-flex flex-row gap-2">
-                      <span>{getFlagEmoji(companyResult.country)}</span>
+                    <div className="d-flex flex-row gap-2 align-items-center ">
+                      <Image width="48" height="48" src={companyResult.logo} className="rounded-1 "></Image>
                       <span className="fw-bold">{companyResult.name}</span>
+                      <span>{getFlagEmoji(companyResult.country)}</span>
+                      <Anchor href={companyResult.website}>{companyResult.website}</Anchor>
                     </div>
                   </div>
                 </div>
               </div>
-              <p className="text-start">{companyResult.explanation}</p>
+              <div className="d-flex flex-row chat gap-2 align-items-center " style={{ backgroundColor: getColorFromScore(companyResult.score) }}>
+                <div className="score">{companyResult.score}</div>
+                <div className="text-start">{companyResult.explanation}</div>
+              </div>
+              <div className="text-start">{companyResult.description}</div>
             </div>
           </Card>
         )

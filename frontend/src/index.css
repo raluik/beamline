@@ -8,3 +8,10 @@
   color: aliceblue;
   font-weight: bold;
 }
+
+.chat {
+  padding: 1rem;
+  color: white;
+  font-weight: 700;
+  border-radius: 5px;
+}

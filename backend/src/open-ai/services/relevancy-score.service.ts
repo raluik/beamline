@@ -8,12 +8,24 @@ export type CompanyData = {
   country: string;
   seo: string;
   description: string;
+  logo: string;
+  website: string;
+  shortDescription: string;
 };
 
 export type CompanyRelevancyResult = CompanyData & {
   score: number;
   explanation: string;
 };
+
+function pickFromObject<T extends object>(obj: T, keys: (keyof T)[]): Pick<T, (typeof keys)[number]> {
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    if (keys.includes(key as keyof T)) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as T);
+}
 
 @Injectable()
 export class RelevancyScoreService {
@@ -54,7 +66,11 @@ The company data is as follows:
         remainingCharacters,
       );
       const selectedCompanies = companies.slice(results.length, results.length + companyCount);
-      const question = QUESTION_PREFIX + JSON.stringify(selectedCompanies);
+      const question =
+        QUESTION_PREFIX +
+        JSON.stringify(
+          selectedCompanies.map((c) => pickFromObject(c, ['country', 'description', 'industry', 'name', 'seo'])),
+        );
       console.log(
         '\n########################## QUESTION ########################## for:',
         selectedCompanies.map((c) => c.name).join(', '),

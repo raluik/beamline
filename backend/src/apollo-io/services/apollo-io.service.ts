@@ -52,6 +52,9 @@ export class ApolloIoService {
         country: c.country,
         seo: c.seo_description,
         description: c.short_description,
+        logo: c.logo_url,
+        website: c.website_url,
+        shortDescription: c.short_description,
       }));
       console.log(
         `################# APOLLO ################# RESULTS (${companies.length}): ${companies

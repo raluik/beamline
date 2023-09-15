@@ -4,6 +4,9 @@ export type CompanyData = {
   country: string;
   seo: string;
   description: string;
+  logo: string;
+  website: string;
+  shortDescription: string;
 };
 
 export type CompanyRelevancyResult = CompanyData & {
