@@ -161,9 +161,9 @@ function App() {
     setTotalCount(undefined);
     setError("");
     const query = {
-      locations: locations ? locations.split(/[ ,]/) : undefined,
-      keywords: keywords ? keywords.split(/[ ,]/) : undefined,
-      relevanceKeywords: relevanceKeywords.split(" "),
+      locations: locations ? locations.split(',') : undefined,
+      keywords: keywords ? keywords.split(',') : undefined,
+      relevanceKeywords: relevanceKeywords.split(','),
       minEmployeeCount: minEmployeeCount || undefined,
       maxEmployeeCount: maxEmployeeCount || undefined,
     };
